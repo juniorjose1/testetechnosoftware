@@ -1,6 +1,7 @@
 package br.com.alexandre.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,7 +19,7 @@ public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 	public void apagarRegistro(@Param("nomeCidade") String nomeCidade);
 	
 	@Query("FROM Cidade WHERE ibge_id = :ibgeid")
-	public Cidade listarCidadePeloIDIBGE(@Param("ibgeid") String id);
+	public Optional<Cidade> listarCidadePeloIDIBGE(@Param("ibgeid") String id);
 	
 	@Query("FROM Cidade WHERE capital = 1 order by name")
 	public List<Cidade> capitaisOrdemNome();
@@ -27,7 +28,7 @@ public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 	public List<String> quantidadeCidadeEstado();
 	
 	@Query("SELECT name FROM Cidade where uf = :uf")
-	public List<String> listarCidadeMesmoEstado(@Param("uf") String uf);
+	public Optional<List<String>> listarCidadeMesmoEstado(@Param("uf") String uf);
 	
 	@Query("SELECT COUNT(*) FROM Cidade")
 	public Integer quantidadeRegistroTotal();
@@ -45,29 +46,29 @@ public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 	public String estadoMenorQuantidadeCidades();
 	
 	@Query("FROM Cidade WHERE name LIKE %:palavra%")
-	public List<Cidade> ProcurarPorNome(@Param("palavra") String palavra);
+	public Optional<List<Cidade>> ProcurarPorNome(@Param("palavra") String palavra);
 	
 	@Query("FROM Cidade WHERE mesoregion LIKE %:palavra%")
-	public List<Cidade> ProcurarPorMesoRegion(@Param("palavra") String palavra);
+	public Optional<List<Cidade>> ProcurarPorMesoRegion(@Param("palavra") String palavra);
 	
 	@Query("FROM Cidade WHERE ibge_id LIKE %:palavra%")
-	public List<Cidade> ProcurarPorIbgeId(@Param("palavra") String ibgeId);
+	public Optional<List<Cidade>> ProcurarPorIbgeId(@Param("palavra") String ibgeId);
 	
 	@Query(value = "SELECT * FROM cidade WHERE IF(capital, 'true', 'false') LIKE %:palavra%",
 			nativeQuery = true)
-	public List<Cidade> ProcurarPorCapital(@Param("palavra") String palavra);
+	public Optional<List<Cidade>> ProcurarPorCapital(@Param("palavra") String palavra);
 	
 	@Query("FROM Cidade WHERE microregion LIKE %:palavra%")
-	public List<Cidade> ProcurarPorMicroRegion(@Param("palavra") String palavra);
+	public Optional<List<Cidade>> ProcurarPorMicroRegion(@Param("palavra") String palavra);
 	
 	@Query("FROM Cidade WHERE alternative_names LIKE %:palavra%")
-	public List<Cidade> ProcurarPorAlternativeNames(@Param("palavra") String palavra);
+	public Optional<List<Cidade>> ProcurarPorAlternativeNames(@Param("palavra") String palavra);
 	
 	@Query("FROM Cidade WHERE no_accents LIKE %:palavra%")
-	public List<Cidade> ProcurarPorNoAccents(@Param("palavra") String palavra);
+	public Optional<List<Cidade>> ProcurarPorNoAccents(@Param("palavra") String palavra);
 	
 	@Query("FROM Cidade WHERE uf like %:palavra%")
-	public List<Cidade> ProcurarPorUf(@Param("palavra") String palavra);
+	public Optional<List<Cidade>> ProcurarPorUf(@Param("palavra") String palavra);
 
 	
 }

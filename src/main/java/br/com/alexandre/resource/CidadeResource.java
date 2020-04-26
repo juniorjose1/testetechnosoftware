@@ -18,7 +18,7 @@ import br.com.alexandre.service.CidadeService;
 
 @RestController
 @RequestMapping("/cidades")
-public class CidadeController {
+public class CidadeResource {
 	
 	@Autowired
 	CidadeService service;

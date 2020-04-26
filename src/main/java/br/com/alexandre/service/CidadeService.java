@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -17,6 +18,7 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
 
 import br.com.alexandre.domain.Cidade;
 import br.com.alexandre.repository.CidadeRepository;
+import br.com.alexandre.service.exception.ObjectNotFoundException;
 
 @Service
 public class CidadeService {
@@ -71,14 +73,17 @@ public class CidadeService {
 	}
 	
 	public Cidade listarCidadePeloIDIBGE(String ibgeId) {
-		Cidade cidade = repo.listarCidadePeloIDIBGE(ibgeId);
+		Optional<Cidade> cidade = repo.listarCidadePeloIDIBGE(ibgeId);
 		
-		return cidade;
+		return cidade.orElseThrow(() -> new ObjectNotFoundException("ibge_id "
+				+ "inexistente !" + ", Tipo: " + Cidade.class.getName()));
 	}
 	
 	public List<String> listarCidadeMesmoEstado(String uf){
-		List<String> cidades = repo.listarCidadeMesmoEstado(uf);
-		return cidades;
+		Optional<List<String>> cidades = repo.listarCidadeMesmoEstado(uf);
+		
+		return cidades.orElseThrow(() -> new ObjectNotFoundException("Estado "
+				+ "inexistente !" + ", Tipo: " + Cidade.class.getName()));
 	}
 	
 	public Integer quantidadeRegistroTotal() {
@@ -111,34 +116,61 @@ public class CidadeService {
 		
 		String colunaSelecionada = coluna;
 		
+		Optional<List<Cidade>> resultado = Optional.empty();
+				
 		if(colunaSelecionada.equals("name")) {
-			List<Cidade> resultadoNome = repo.ProcurarPorNome(palavra);
-			return resultadoNome;
+			resultado = repo.ProcurarPorNome(palavra);
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Nenhum registro "
+					+ "encontrado na coluna |name| correspondente a " + "|" + palavra + "|"
+					+ ", Tipo: " + Cidade.class.getName()));
+			
 		} else if(colunaSelecionada.equals("mesoregion")) {
-			List<Cidade> resultadoMesoRegion = repo.ProcurarPorMesoRegion(palavra);
-			return resultadoMesoRegion;
+			resultado = repo.ProcurarPorMesoRegion(palavra);
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Nenhum registro "
+					+ "encontrado na coluna |mesoregion| correspondente a " + "|" + palavra + "|"
+					+ ", Tipo: " + Cidade.class.getName()));
+			
 		} else if(colunaSelecionada.equals("ibge_id")) {
-			List<Cidade> resultadoIbge = repo.ProcurarPorIbgeId(palavra);
-			return resultadoIbge;
+			resultado = repo.ProcurarPorIbgeId(palavra);
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Nenhum registro "
+					+ "encontrado na coluna |ibge_id| correspondente a " + "|" + palavra + "|"
+					+ ", Tipo: " + Cidade.class.getName()));
+			
 		} else if(colunaSelecionada.equals("capital")) {
-			List<Cidade> resultadoCapital = repo.ProcurarPorCapital(palavra);
-			return resultadoCapital;
+			resultado = repo.ProcurarPorCapital(palavra);
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Nenhum registro "
+					+ "encontrado na coluna |capital| correspondente a " + "|" + palavra + "|"
+					+ ", Tipo: " + Cidade.class.getName()));
+			
 		} else if(colunaSelecionada.equals("microregion")) {
-			List<Cidade> resultadoMicroRegion = repo.ProcurarPorMicroRegion(palavra);
-			return resultadoMicroRegion;
+			resultado = repo.ProcurarPorMicroRegion(palavra);
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Nenhum registro "
+					+ "encontrado na coluna |microregion| correspondente a " + "|" + palavra + "|"
+					+ ", Tipo: " + Cidade.class.getName()));
+			
 		} else if(colunaSelecionada.equals("alternative_names")) {
-			List<Cidade> resultadoAlternativeNames = repo.ProcurarPorAlternativeNames(palavra);
-			return resultadoAlternativeNames;
+			resultado = repo.ProcurarPorAlternativeNames(palavra);
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Nenhum registro "
+					+ "encontrado na coluna |alternative_names| correspondente a " + "|" + palavra + "|"
+					+ ", Tipo: " + Cidade.class.getName()));
+			
 		} else if(colunaSelecionada.equals("no_accents")) {
-			List<Cidade> resultadoNoAccents = repo.ProcurarPorNoAccents(palavra);
-			return resultadoNoAccents;
+			resultado = repo.ProcurarPorNoAccents(palavra);
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Nenhum registro "
+					+ "encontrado na coluna |no_accents| correspondente a " + "|" + palavra + "|"
+					+ ", Tipo: " + Cidade.class.getName()));
+			
 		} else if(colunaSelecionada.equals("uf")) {
-			List<Cidade> resultadoUf = repo.ProcurarPorUf(palavra);
-			return resultadoUf;
-		}
-		
-		return null;
-		
+			resultado = repo.ProcurarPorUf(palavra);
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Nenhum registro "
+					+ "encontrado na coluna |uf| correspondente a " + "|" + palavra + "|"
+					+ ", Tipo: " + Cidade.class.getName()));
+		}else {
+			
+			return resultado.orElseThrow(() -> new ObjectNotFoundException("Coluna "
+					+ "Não Encontrada ou tipo não suportado !" + ", Tipo: " + Cidade.class.getName()));
+		} 
+			
 	}
 	
 }
