@@ -19,7 +19,7 @@ public class Cidade {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private Long ibge_id;
+	private String ibge_id;
 
 	private String uf;
 
